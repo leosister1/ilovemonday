@@ -936,6 +936,27 @@ body {
 </section>
 
 <script>
+  /* ── 탭 전환 (맨 위에 정의해서 onclick 에서 항상 접근 가능하게) ── */
+  var _sectionIds = ['sec-money', 'sec-bag', 'sec-retire'];
+
+  window.showSection = function(id, btn) {
+    _sectionIds.forEach(function(sid) {
+      document.getElementById(sid).classList.remove('active');
+    });
+    document.querySelectorAll('.nav-tab').forEach(function(t) {
+      t.classList.remove('active');
+    });
+    document.getElementById(id).classList.add('active');
+    btn.classList.add('active');
+    if (id === 'sec-bag') {
+      setTimeout(resizeCanvas, 50);
+    }
+    document.getElementById(id).scrollTop = 0;
+  };
+
+  // 첫 화면: 수익 섹션 활성화
+  document.getElementById('sec-money').classList.add('active');
+
   /* ── 테마 ── */
   const root = document.documentElement;
   let currentTheme = 'dark';
@@ -954,24 +975,8 @@ body {
     updateThemeBtn();
   });
 
-  /* ── 네비게이션 ── */
-  function navTo(id) {
-    document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
-  }
-
-  const sections = ['sec-money', 'sec-bag', 'sec-retire'];
-  const tabs = document.querySelectorAll('.nav-tab');
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const idx = sections.indexOf(entry.target.id);
-        tabs.forEach((t, i) => t.classList.toggle('active', i === idx));
-      }
-    });
-  }, { threshold: 0.4 });
-
-  sections.forEach(id => observer.observe(document.getElementById(id)));
+  /* ── 탭 전환 변수 (기존 코드 참조용) ── */
+  const sectionIds = _sectionIds;
 
   /* ── 수익 계산기 ── */
   const WORK_HOURS = 8;

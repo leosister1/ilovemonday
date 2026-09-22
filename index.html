@@ -1,0 +1,1501 @@
+<title>직장인 생존 키트</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Space+Grotesk:wght@400;600;700&display=swap">
+
+<style>
+/* ── 토큰 (다크 기본) ── */
+:root {
+  --bg:       #0D0E14;
+  --surface:  #141620;
+  --surface2: #1C1F2E;
+  --border:   #252840;
+  --accent:   #F0DC3C;
+  --red:      #FF5050;
+  --green:    #3FDC8A;
+  --text:     #DDD8CE;
+  --muted:    #5E6380;
+
+  --font-kr: 'Noto Sans KR', sans-serif;
+  --font-en: 'Space Grotesk', sans-serif;
+
+  --nav-h: 56px;
+}
+
+/* 라이트 모드 */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg:       #F0ECE2;
+    --surface:  #FAFAF5;
+    --surface2: #EDEADE;
+    --border:   #D8D4C8;
+    --accent:   #C8A800;
+    --red:      #D63030;
+    --green:    #1A8A50;
+    --text:     #18191F;
+    --muted:    #7A7E96;
+  }
+}
+:root[data-theme="dark"] {
+  --bg:       #0D0E14;
+  --surface:  #141620;
+  --surface2: #1C1F2E;
+  --border:   #252840;
+  --accent:   #F0DC3C;
+  --red:      #FF5050;
+  --green:    #3FDC8A;
+  --text:     #DDD8CE;
+  --muted:    #5E6380;
+}
+:root[data-theme="light"] {
+  --bg:       #F0ECE2;
+  --surface:  #FAFAF5;
+  --surface2: #EDEADE;
+  --border:   #D8D4C8;
+  --accent:   #C8A800;
+  --red:      #D63030;
+  --green:    #1A8A50;
+  --text:     #18191F;
+  --muted:    #7A7E96;
+}
+
+/* ── 리셋 & 베이스 ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-kr);
+  font-size: 15px;
+  line-height: 1.7;
+  padding-inline: 0;
+}
+
+/* ── 상단 네비게이션 ── */
+.nav {
+  position: fixed;
+  top: env(safe-area-inset-top, 0px);
+  left: 0; right: 0;
+  height: var(--nav-h);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-inline: 24px;
+  z-index: 100;
+}
+
+.nav-logo {
+  font-family: var(--font-en);
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.nav-logo span { color: var(--accent); }
+
+.nav-tabs {
+  display: flex;
+  gap: 2px;
+}
+
+.nav-tab {
+  background: none;
+  border: none;
+  padding: 7px 16px;
+  border-radius: 4px;
+  font-family: var(--font-kr);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s;
+  white-space: nowrap;
+}
+
+.nav-tab:hover { color: var(--text); background: var(--surface2); }
+.nav-tab.active { color: var(--accent); background: rgba(240,220,60,0.10); }
+
+/* ── 섹션 공통 ── */
+.section {
+  min-height: 100vh;
+  padding-top: calc(var(--nav-h) + 60px);
+  padding-bottom: 80px;
+  padding-inline: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.section-inner {
+  width: 100%;
+  max-width: 600px;
+}
+
+.section-tag {
+  font-family: var(--font-en);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+
+.section-title {
+  font-size: clamp(26px, 6vw, 40px);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  margin-bottom: 8px;
+}
+
+.section-desc {
+  font-size: 14px;
+  color: var(--muted);
+  margin-bottom: 40px;
+}
+
+/* 구분선 */
+.section-divider {
+  width: 100%;
+  height: 1px;
+  background: var(--border);
+  margin-block: 0;
+}
+
+/* ── 플레이스홀더 카드 (기능 개발 전 임시) ── */
+.placeholder-card {
+  background: var(--surface);
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  padding: 60px 40px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.placeholder-icon { font-size: 40px; margin-bottom: 12px; }
+
+/* ── 섹션별 강조색 ── */
+#sec-money  .section-title { color: var(--accent); }
+#sec-bag    .section-title { color: var(--red);    }
+#sec-retire .section-title { color: var(--green);  }
+
+/* ── 수익 계산기 ── */
+.money-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.money-input-area {
+  padding: 28px 28px 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.type-pills {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+
+.type-pill {
+  flex: 1;
+  padding: 8px 0;
+  border: 1px solid var(--border);
+  background: none;
+  border-radius: 6px;
+  font-family: var(--font-kr);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: center;
+}
+
+.type-pill.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #000;
+}
+
+.input-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0 16px;
+  margin-bottom: 14px;
+}
+
+.input-row:focus-within {
+  border-color: var(--accent);
+}
+
+.input-prefix {
+  font-family: var(--font-en);
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+
+.salary-input {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  font-family: var(--font-en);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+  padding: 14px 0;
+  font-variant-numeric: tabular-nums;
+  min-width: 0;
+}
+
+.salary-input::placeholder { color: var(--border); }
+
+.input-unit {
+  font-size: 13px;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+
+.extra-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.checkin-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.checkin-input {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 5px 10px;
+  font-family: var(--font-en);
+  font-size: 13px;
+  color: var(--text);
+  outline: none;
+  width: 90px;
+}
+
+.checkin-input:focus { border-color: var(--accent); }
+
+.overtime-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.toggle {
+  width: 36px;
+  height: 20px;
+  background: var(--border);
+  border-radius: 10px;
+  position: relative;
+  transition: background 0.2s;
+  cursor: pointer;
+  flex-shrink: 0;
+  border: none;
+  outline: none;
+}
+
+.toggle::after {
+  content: '';
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  background: #fff;
+  border-radius: 50%;
+  top: 3px;
+  left: 3px;
+  transition: transform 0.2s;
+}
+
+.toggle.on { background: var(--accent); }
+.toggle.on::after { transform: translateX(16px); }
+
+/* 결과 영역 */
+.money-result {
+  padding: 32px 28px;
+}
+
+.result-label {
+  font-family: var(--font-en);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.per-second-num {
+  font-family: var(--font-en);
+  font-size: clamp(36px, 10vw, 60px);
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: -0.03em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  margin-bottom: 6px;
+  min-height: 1.1em;
+}
+
+.per-second-sub {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 28px;
+}
+
+.stat-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.stat-box {
+  background: var(--surface2);
+  border-radius: 8px;
+  padding: 16px 18px;
+}
+
+.stat-label {
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+.stat-value {
+  font-family: var(--font-en);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+.live-msg {
+  background: rgba(240,220,60,0.08);
+  border: 1px solid rgba(240,220,60,0.2);
+  border-radius: 8px;
+  padding: 14px 18px;
+  font-size: 13px;
+  color: var(--accent);
+  text-align: center;
+  min-height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.empty-state .emoji { font-size: 36px; margin-bottom: 10px; }
+
+/* ── 퇴직금 계산기 ── */
+.retire-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.retire-input-area {
+  padding: 28px 28px 24px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.retire-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.retire-field-label {
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.retire-input-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0 16px;
+}
+
+.retire-input-row:focus-within { border-color: var(--green); }
+
+.retire-input {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  font-family: var(--font-en);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  padding: 12px 0;
+  font-variant-numeric: tabular-nums;
+  min-width: 0;
+}
+
+.retire-input[type="date"] { font-size: 15px; cursor: pointer; }
+.retire-input::placeholder { color: var(--border); }
+
+.retire-result {
+  padding: 28px 28px 32px;
+}
+
+.retire-big {
+  font-family: var(--font-en);
+  font-size: clamp(34px, 9vw, 56px);
+  font-weight: 700;
+  color: var(--green);
+  letter-spacing: -0.03em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  margin-bottom: 4px;
+}
+
+.retire-sub {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 24px;
+}
+
+.tenure-bar-wrap {
+  margin-bottom: 24px;
+}
+
+.tenure-bar-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.tenure-bar-track {
+  height: 6px;
+  background: var(--surface2);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.tenure-bar-fill {
+  height: 100%;
+  background: var(--green);
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+
+.retire-stat-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.retire-stat-box {
+  background: var(--surface2);
+  border-radius: 8px;
+  padding: 14px 14px;
+  text-align: center;
+}
+
+.retire-stat-label {
+  font-size: 10px;
+  color: var(--muted);
+  margin-bottom: 5px;
+}
+
+.retire-stat-val {
+  font-family: var(--font-en);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.retire-msg {
+  background: rgba(63,220,138,0.08);
+  border: 1px solid rgba(63,220,138,0.2);
+  border-radius: 8px;
+  padding: 14px 18px;
+  font-size: 13px;
+  color: var(--green);
+  text-align: center;
+  line-height: 1.6;
+}
+
+.retire-disclaimer {
+  font-size: 11px;
+  color: var(--muted);
+  text-align: center;
+  margin-top: 14px;
+  opacity: 0.7;
+}
+
+/* ── 샌드백 ── */
+.bag-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  user-select: none;
+}
+
+.bag-canvas-wrap {
+  position: relative;
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border);
+  cursor: crosshair;
+}
+
+#bag-canvas {
+  display: block;
+  width: 100%;
+  touch-action: none;
+}
+
+.bag-name-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.bag-name-label { font-size: 13px; color: var(--muted); flex-shrink: 0; }
+
+.bag-name-input {
+  flex: 1;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 7px 12px;
+  font-family: var(--font-kr);
+  font-size: 14px;
+  color: var(--text);
+  outline: none;
+  min-width: 0;
+}
+
+.bag-name-input:focus { border-color: var(--red); }
+
+.bag-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  padding: 20px 24px;
+  gap: 0;
+}
+
+.bag-stat {
+  text-align: center;
+  padding: 0 12px;
+  border-right: 1px solid var(--border);
+}
+
+.bag-stat:last-child { border-right: none; }
+
+.bag-stat-label {
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+.bag-stat-val {
+  font-family: var(--font-en);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.2;
+}
+
+.bag-stat-val.red   { color: var(--red); }
+.bag-stat-val.combo { color: var(--accent); }
+
+.bag-combo-msg {
+  padding: 14px 20px;
+  min-height: 50px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--red);
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: -0.01em;
+  transition: opacity 0.3s;
+}
+
+/* ── 테마 토글 ── */
+.theme-btn {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  width: 34px;
+  height: 34px;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  transition: border-color 0.15s, color 0.15s;
+  flex-shrink: 0;
+}
+.theme-btn:hover { border-color: var(--accent); color: var(--text); }
+
+/* ── 푸터 ── */
+.site-footer {
+  text-align: center;
+  padding: 48px 24px 60px;
+  border-top: 1px solid var(--border);
+}
+.footer-quote {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.footer-quote strong { color: var(--accent); font-weight: 700; }
+.footer-copy {
+  font-family: var(--font-en);
+  font-size: 11px;
+  color: var(--border);
+  letter-spacing: 0.08em;
+}
+
+/* ── 반응형 ── */
+@media (max-width: 520px) {
+  .nav { padding-inline: 14px; gap: 8px; }
+  .nav-tab { padding: 6px 10px; font-size: 12px; }
+  .section { padding-inline: 16px; }
+  .money-input-area { padding: 20px; }
+  .money-result { padding: 24px 20px; }
+  .stat-row { grid-template-columns: 1fr; }
+  .extra-row { flex-direction: column; align-items: flex-start; }
+  .retire-stat-row { grid-template-columns: 1fr; }
+  .bag-stats { padding: 16px; }
+  .bag-stat-val { font-size: 18px; }
+  .retire-input-area { padding: 20px; }
+  .retire-result { padding: 20px; }
+}
+@media (max-width: 360px) {
+  .nav-tab { font-size: 11px; padding: 5px 8px; }
+}
+
+/* 모션 감소 */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .toggle::after { transition: none; }
+}
+</style>
+
+<!-- 네비게이션 -->
+<nav class="nav">
+  <a class="nav-logo" href="#sec-money">생존<span>키트</span></a>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="navTo('sec-money')">💰 수익</button>
+    <button class="nav-tab"        onclick="navTo('sec-bag')">🥊 샌드백</button>
+    <button class="nav-tab"        onclick="navTo('sec-retire')">📈 퇴직금</button>
+  </div>
+  <button class="theme-btn" id="theme-btn" aria-label="테마 변경">🌙</button>
+</nav>
+
+<!-- 섹션 1: 초당 수익 -->
+<section class="section" id="sec-money">
+  <div class="section-inner">
+    <div class="section-tag">Feature 01</div>
+    <div class="section-title">지금 이 순간<br>얼마 벌고 있어?</div>
+    <div class="section-desc">월급을 입력하면 초 단위로 수익을 보여드립니다.</div>
+
+    <div class="money-card">
+      <!-- 입력 영역 -->
+      <div class="money-input-area">
+        <div class="type-pills">
+          <button class="type-pill active" data-type="monthly">월급</button>
+          <button class="type-pill" data-type="yearly">연봉</button>
+          <button class="type-pill" data-type="daily">일당</button>
+        </div>
+
+        <div class="input-row">
+          <span class="input-prefix">₩</span>
+          <input class="salary-input" id="salary-input" type="text"
+                 inputmode="numeric" placeholder="3,500,000">
+          <span class="input-unit" id="salary-unit">원 / 월</span>
+        </div>
+
+        <div class="extra-row">
+          <label class="checkin-wrap">
+            출근 시각
+            <input class="checkin-input" id="checkin-time" type="time" value="09:00">
+          </label>
+          <label class="overtime-wrap">
+            <button class="toggle" id="overtime-toggle" aria-label="야근 모드" role="switch" aria-checked="false"></button>
+            야근 모드 <small style="font-size:11px;">(×1.5)</small>
+          </label>
+        </div>
+      </div>
+
+      <!-- 결과 영역 -->
+      <div class="money-result" id="money-result">
+        <div class="empty-state" id="money-empty">
+          <div class="emoji">💰</div>
+          월급을 입력해보세요
+        </div>
+
+        <div id="money-display" hidden>
+          <div class="result-label">초당 수익</div>
+          <div class="per-second-num" id="per-sec-display">₩0.0000</div>
+          <div class="per-second-sub" id="per-sec-sub"></div>
+
+          <div class="stat-row">
+            <div class="stat-box">
+              <div class="stat-label">오늘 출근 후 누적</div>
+              <div class="stat-value" id="today-earned">₩0</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">이 화면 본 이후</div>
+              <div class="stat-value" id="session-earned">₩0</div>
+            </div>
+          </div>
+
+          <div class="live-msg" id="live-msg">계산 중...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- 섹션 2: 샌드백 -->
+<section class="section" id="sec-bag">
+  <div class="section-inner">
+    <div class="section-tag">Feature 02</div>
+    <div class="section-title">그냥 한 대<br>치고 싶을 때</div>
+    <div class="section-desc">클릭 또는 탭으로 치세요. 법적 문제 없습니다.</div>
+
+    <div class="bag-card">
+      <div class="bag-canvas-wrap" id="bag-wrap">
+        <canvas id="bag-canvas" height="360"></canvas>
+      </div>
+
+      <div class="bag-name-row">
+        <span class="bag-name-label">샌드백 이름</span>
+        <input class="bag-name-input" id="bag-name" type="text"
+               placeholder="이름을 붙여보세요 (선택)" maxlength="20">
+      </div>
+
+      <div class="bag-stats">
+        <div class="bag-stat">
+          <div class="bag-stat-label">총 타격 수</div>
+          <div class="bag-stat-val red" id="hit-count">0</div>
+        </div>
+        <div class="bag-stat">
+          <div class="bag-stat-label">현재 콤보</div>
+          <div class="bag-stat-val combo" id="combo-count">0</div>
+        </div>
+        <div class="bag-stat">
+          <div class="bag-stat-label">최고 콤보</div>
+          <div class="bag-stat-val" id="max-combo">0</div>
+        </div>
+      </div>
+
+      <div class="bag-combo-msg" id="combo-msg">클릭해서 시작하세요 👊</div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- 섹션 3: 퇴직금 -->
+<section class="section" id="sec-retire">
+  <div class="section-inner">
+    <div class="section-tag">Feature 03</div>
+    <div class="section-title">버티는 게<br>곧 투자다</div>
+    <div class="section-desc">지금 이 순간에도 퇴직금은 쌓이고 있습니다.</div>
+
+    <div class="retire-card">
+      <div class="retire-input-area">
+        <div class="retire-field">
+          <div class="retire-field-label">입사일</div>
+          <div class="retire-input-row">
+            <input class="retire-input" id="join-date" type="date">
+          </div>
+        </div>
+        <div class="retire-field">
+          <div class="retire-field-label">월급</div>
+          <div class="retire-input-row">
+            <span class="input-prefix">₩</span>
+            <input class="retire-input" id="retire-salary" type="text"
+                   inputmode="numeric" placeholder="3,500,000">
+            <span class="input-unit">원 / 월</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="retire-result">
+        <div class="empty-state" id="retire-empty">
+          <div class="emoji">📈</div>
+          입사일과 월급을 입력해보세요
+        </div>
+
+        <div id="retire-display" hidden>
+          <div class="result-label">현재까지 쌓인 퇴직금</div>
+          <div class="retire-big" id="retire-total">₩0</div>
+          <div class="retire-sub" id="retire-sub">계산 중...</div>
+
+          <div class="tenure-bar-wrap">
+            <div class="tenure-bar-label">
+              <span id="tenure-label">재직 0일</span>
+              <span id="next-milestone">1년까지 0일</span>
+            </div>
+            <div class="tenure-bar-track">
+              <div class="tenure-bar-fill" id="tenure-bar" style="width:0%"></div>
+            </div>
+          </div>
+
+          <div class="retire-stat-row">
+            <div class="retire-stat-box">
+              <div class="retire-stat-label">1년 후 예상</div>
+              <div class="retire-stat-val" id="proj-1y">—</div>
+            </div>
+            <div class="retire-stat-box">
+              <div class="retire-stat-label">3년 후 예상</div>
+              <div class="retire-stat-val" id="proj-3y">—</div>
+            </div>
+            <div class="retire-stat-box">
+              <div class="retire-stat-label">5년 후 예상</div>
+              <div class="retire-stat-val" id="proj-5y">—</div>
+            </div>
+          </div>
+
+          <div class="retire-msg" id="retire-msg">계산 중...</div>
+          <div class="retire-disclaimer">※ 참고용 계산입니다. 정확한 금액은 노무사에게 문의하세요.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 푸터 -->
+<footer class="site-footer">
+  <p class="footer-quote">이 사이트를 만드는 동안에도 <strong>퇴직금은 쌓이고 있었습니다.</strong></p>
+  <p class="footer-copy">직장인 생존 키트 · 퇴사는 당신의 권리입니다</p>
+</footer>
+
+<script>
+  /* ── 네비게이션 ── */
+  function scrollTo(id) {
+    document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+  }
+
+  const sections = ['sec-money', 'sec-bag', 'sec-retire'];
+  const tabs = document.querySelectorAll('.nav-tab');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const idx = sections.indexOf(entry.target.id);
+        tabs.forEach((t, i) => t.classList.toggle('active', i === idx));
+      }
+    });
+  }, { threshold: 0.4 });
+
+  sections.forEach(id => observer.observe(document.getElementById(id)));
+
+  /* ── 수익 계산기 ── */
+  const WORK_HOURS = 8;
+  const WORK_DAYS_MONTH = 22;
+  const WORK_DAYS_YEAR = 260;
+
+  let salaryType = 'monthly';  // monthly | yearly | daily
+  let salaryRaw  = 0;          // 입력된 원화 숫자
+  let overtime   = false;
+  let perSecond  = 0;          // 초당 수익 (원)
+  let rafId      = null;
+  const sessionStart = Date.now();
+
+  // 단위 레이블
+  const unitLabel = { monthly: '원 / 월', yearly: '원 / 년', daily: '원 / 일' };
+
+  // localStorage 복원
+  try {
+    const saved = JSON.parse(localStorage.getItem('survival-money') || '{}');
+    if (saved.type)   salaryType = saved.type;
+    if (saved.amount) document.getElementById('salary-input').value = fmt(saved.amount);
+    if (saved.checkin) document.getElementById('checkin-time').value = saved.checkin;
+    if (saved.overtime) {
+      overtime = true;
+      document.getElementById('overtime-toggle').classList.add('on');
+    }
+    if (saved.amount) salaryRaw = saved.amount;
+  } catch(e) {}
+
+  // 타입 pill 초기 상태 반영
+  document.querySelectorAll('.type-pill').forEach(p => {
+    p.classList.toggle('active', p.dataset.type === salaryType);
+  });
+  document.getElementById('salary-unit').textContent = unitLabel[salaryType];
+
+  // 타입 선택
+  document.querySelectorAll('.type-pill').forEach(pill => {
+    pill.addEventListener('click', () => {
+      salaryType = pill.dataset.type;
+      document.querySelectorAll('.type-pill').forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+      document.getElementById('salary-unit').textContent = unitLabel[salaryType];
+      recalc();
+      save();
+    });
+  });
+
+  // 금액 입력 — 천단위 콤마
+  document.getElementById('salary-input').addEventListener('input', (e) => {
+    const raw = e.target.value.replace(/[^0-9]/g, '');
+    salaryRaw = parseInt(raw || '0', 10);
+    e.target.value = raw ? fmt(salaryRaw) : '';
+    recalc();
+    save();
+  });
+
+  // 출근 시각
+  document.getElementById('checkin-time').addEventListener('change', () => save());
+
+  // 야근 토글
+  document.getElementById('overtime-toggle').addEventListener('click', function() {
+    overtime = !overtime;
+    this.classList.toggle('on', overtime);
+    this.setAttribute('aria-checked', overtime);
+    recalc();
+    save();
+  });
+
+  function fmt(n) {
+    return Math.floor(n).toLocaleString('ko-KR');
+  }
+
+  function fmtWon(n) {
+    if (n >= 1e8) return `₩${(n / 1e8).toFixed(2)}억`;
+    if (n >= 1e4) return `₩${fmt(n)}`;
+    return `₩${n.toFixed(2)}`;
+  }
+
+  function recalc() {
+    if (!salaryRaw) {
+      perSecond = 0;
+      document.getElementById('money-empty').hidden = false;
+      document.getElementById('money-display').hidden = true;
+      if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+      return;
+    }
+
+    const workSeconds = WORK_HOURS * 3600;
+    if (salaryType === 'monthly') {
+      perSecond = salaryRaw / (WORK_DAYS_MONTH * workSeconds);
+    } else if (salaryType === 'yearly') {
+      perSecond = salaryRaw / (WORK_DAYS_YEAR * workSeconds);
+    } else {
+      perSecond = salaryRaw / workSeconds;
+    }
+
+    if (overtime) perSecond *= 1.5;
+
+    document.getElementById('money-empty').hidden = true;
+    document.getElementById('money-display').hidden = false;
+
+    // 분/시간 단위 서브 텍스트
+    const perMin  = perSecond * 60;
+    const perHour = perSecond * 3600;
+    document.getElementById('per-sec-sub').textContent =
+      `분당 ${fmtWon(perMin)} · 시간당 ${fmtWon(perHour)}`;
+
+    if (!rafId) tick();
+  }
+
+  function tick() {
+    const now = Date.now();
+
+    // 초당 표시 (소수점 4자리)
+    document.getElementById('per-sec-display').textContent =
+      `₩${perSecond.toFixed(4)}`;
+
+    // 오늘 출근 후 누적
+    const checkinVal = document.getElementById('checkin-time').value || '09:00';
+    const [h, m] = checkinVal.split(':').map(Number);
+    const today = new Date();
+    const checkinTime = new Date(today.getFullYear(), today.getMonth(), today.getDate(), h, m, 0);
+    const todaySecs = Math.max(0, (now - checkinTime.getTime()) / 1000);
+    document.getElementById('today-earned').textContent = fmtWon(todaySecs * perSecond);
+
+    // 이 화면 본 이후
+    const sessionSecs = (now - sessionStart) / 1000;
+    document.getElementById('session-earned').textContent = fmtWon(sessionSecs * perSecond);
+
+    // 라이브 메시지
+    const msgs = [
+      `지금 이 문장 읽는 동안 ₩${(perSecond * 2).toFixed(2)} 벌었습니다`,
+      `화장실 다녀오는 5분 동안 ${fmtWon(perSecond * 300)} 입금 예정`,
+      `오늘 점심시간 1시간 = ${fmtWon(perSecond * 3600)} (공짜 밥 아님)`,
+      `야근 1시간 더 하면 ${fmtWon(perSecond * 3600 * (overtime ? 1 : 1.5))} 추가`,
+    ];
+    const idx = Math.floor(sessionSecs / 5) % msgs.length;
+    document.getElementById('live-msg').textContent = msgs[idx];
+
+    rafId = requestAnimationFrame(tick);
+  }
+
+  function save() {
+    try {
+      localStorage.setItem('survival-money', JSON.stringify({
+        type: salaryType,
+        amount: salaryRaw,
+        checkin: document.getElementById('checkin-time').value,
+        overtime,
+      }));
+    } catch(e) {}
+  }
+
+  // 저장된 값 있으면 바로 계산
+  if (salaryRaw) recalc();
+
+  /* ── 퇴직금 계산기 ── */
+  // 퇴직금 = 월급 × (재직일수 / 365)  (1일 평균임금 × 30 × 재직연수 근사)
+  // 초당 증가액 = 월급 / 365 / 86400
+
+  let retireSalary = 0;
+  let retireRafId  = null;
+
+  // localStorage 복원
+  try {
+    const rs = JSON.parse(localStorage.getItem('survival-retire') || '{}');
+    if (rs.joinDate) document.getElementById('join-date').value = rs.joinDate;
+    if (rs.salary) {
+      retireSalary = rs.salary;
+      document.getElementById('retire-salary').value = fmtNum(rs.salary);
+    }
+  } catch(e) {}
+
+  function fmtNum(n) { return Math.floor(n).toLocaleString('ko-KR'); }
+
+  function fmtWonR(n) {
+    if (n >= 1e8) return `₩${(n / 1e8).toFixed(1)}억`;
+    if (n >= 1e4) return `₩${fmtNum(n)}`;
+    return `₩${n.toFixed(0)}`;
+  }
+
+  // 월급 입력
+  document.getElementById('retire-salary').addEventListener('input', (e) => {
+    const raw = e.target.value.replace(/[^0-9]/g, '');
+    retireSalary = parseInt(raw || '0', 10);
+    e.target.value = raw ? fmtNum(retireSalary) : '';
+    retireRecalc();
+    saveRetire();
+  });
+
+  // 입사일 입력
+  document.getElementById('join-date').addEventListener('change', () => {
+    retireRecalc();
+    saveRetire();
+  });
+
+  function retireRecalc() {
+    const joinVal = document.getElementById('join-date').value;
+    if (!joinVal || !retireSalary) {
+      document.getElementById('retire-empty').hidden = false;
+      document.getElementById('retire-display').hidden = true;
+      if (retireRafId) { cancelAnimationFrame(retireRafId); retireRafId = null; }
+      return;
+    }
+
+    document.getElementById('retire-empty').hidden = true;
+    document.getElementById('retire-display').hidden = false;
+
+    // 예상치 (고정)
+    const joinDate = new Date(joinVal);
+    const perSecIncrease = retireSalary / 365 / 86400;
+
+    // 1/3/5년 예상
+    document.getElementById('proj-1y').textContent = fmtWonR(retireSalary * 1);
+    document.getElementById('proj-3y').textContent = fmtWonR(retireSalary * 3);
+    document.getElementById('proj-5y').textContent = fmtWonR(retireSalary * 5);
+
+    if (!retireRafId) retireTick(joinDate, perSecIncrease);
+  }
+
+  function retireTick(joinDate, perSecIncrease) {
+    const now = new Date();
+    const diffMs   = now - joinDate;
+    const diffDays = Math.max(0, diffMs / 86400000);
+    const diffSecs = Math.max(0, diffMs / 1000);
+
+    // 현재 퇴직금
+    const current = retireSalary * (diffDays / 365);
+    document.getElementById('retire-total').textContent = fmtWonR(current);
+
+    // 재직 기간
+    const years  = Math.floor(diffDays / 365);
+    const months = Math.floor((diffDays % 365) / 30);
+    const days   = Math.floor(diffDays % 30);
+    document.getElementById('retire-sub').textContent =
+      `초당 +${fmtWonR(perSecIncrease)} 증가 중`;
+
+    // 연수 진행바 (현재 연도 내 진행률)
+    const progressInYear = (diffDays % 365) / 365;
+    document.getElementById('tenure-bar').style.width = `${progressInYear * 100}%`;
+
+    const daysLabel = years > 0
+      ? `${years}년 ${months}개월 ${days}일 재직`
+      : `${Math.floor(diffDays)}일 재직`;
+    document.getElementById('tenure-label').textContent = daysLabel;
+
+    const daysToNext = 365 - (diffDays % 365);
+    const nextYear = years + 1;
+    document.getElementById('next-milestone').textContent =
+      `${nextYear}년까지 ${Math.ceil(daysToNext)}일`;
+
+    // 동기부여 메시지
+    const addPerDay  = retireSalary / 365;
+    const addPer30   = addPerDay * 30;
+    const msgs = [
+      `지금 퇴사하면 ${fmtWonR(current)} 수령 가능합니다`,
+      `한 달 더 버티면 퇴직금 ${fmtWonR(addPer30)} 추가`,
+      `${nextYear}년 채우면 총 ${fmtWonR(retireSalary * nextYear)} 예상`,
+      `오늘 하루도 버텼습니다. +${fmtWonR(addPerDay)}`,
+    ];
+    const idx = Math.floor(Date.now() / 5000) % msgs.length;
+    document.getElementById('retire-msg').textContent = msgs[idx];
+
+    retireRafId = requestAnimationFrame(() => retireTick(joinDate, perSecIncrease));
+  }
+
+  function saveRetire() {
+    try {
+      localStorage.setItem('survival-retire', JSON.stringify({
+        joinDate: document.getElementById('join-date').value,
+        salary: retireSalary,
+      }));
+    } catch(e) {}
+  }
+
+  // 저장된 값 있으면 바로 계산
+  if (retireSalary && document.getElementById('join-date').value) retireRecalc();
+
+  /* ── 샌드백 ── */
+  const canvas  = document.getElementById('bag-canvas');
+  const ctx     = canvas.getContext('2d');
+  const bagWrap = document.getElementById('bag-wrap');
+
+  // 캔버스 크기를 래퍼에 맞춤
+  function resizeCanvas() {
+    const dpr = window.devicePixelRatio || 1;
+    const w   = bagWrap.clientWidth;
+    canvas.width  = w * dpr;
+    canvas.height = 360 * dpr;
+    canvas.style.height = '360px';
+    ctx.scale(dpr, dpr);
+    CW = w;
+    CH = 360;
+  }
+
+  let CW = 600, CH = 360;
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+
+  // ── 물리 ──
+  const ROPE_LEN  = 140;
+  const GRAVITY   = 0.0028;
+  const DAMPING   = 0.985;
+  const BAG_W     = 64;
+  const BAG_H     = 100;
+
+  let angle   = 0;
+  let angVel  = 0;
+  let flash   = 0;       // 타격 플래시 (0→1)
+  let shake   = 0;       // 화면 흔들림
+
+  // ── 파티클 ──
+  let particles = [];
+
+  function spawnParticles(bx, by) {
+    for (let i = 0; i < 12; i++) {
+      const a = Math.random() * Math.PI * 2;
+      const s = 2 + Math.random() * 4;
+      particles.push({ x: bx, y: by, vx: Math.cos(a)*s, vy: Math.sin(a)*s - 2,
+                       life: 1, size: 2 + Math.random() * 3 });
+    }
+  }
+
+  // ── 타격 통계 ──
+  let hitTotal  = 0;
+  let combo     = 0;
+  let maxCombo  = 0;
+  let comboTimer = null;
+
+  const comboMessages = [
+    [1,   '👊 좋아, 시작이야'],
+    [3,   '💥 좀 풀리는 느낌?'],
+    [5,   '🔥 이 정도면 퇴사각'],
+    [10,  '😤 오늘 회의가 생각나나요?'],
+    [20,  '🤜 주먹 좀 쉬게 해줘요'],
+    [30,  '🥵 진정하세요, 다 잘될 거예요'],
+    [50,  '💀 50콤보... 그분이 그렇게 싫으세요?'],
+    [100, '🏆 100콤보! 당신은 퇴직금 2배 받을 자격 있음'],
+  ];
+
+  function getComboMsg(c) {
+    let msg = '클릭해서 시작하세요 👊';
+    for (const [threshold, text] of comboMessages) {
+      if (c >= threshold) msg = text;
+    }
+    return msg;
+  }
+
+  // ── 사운드 ──
+  let audioCtx = null;
+
+  function playHit(intensity) {
+    try {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc  = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(80 + intensity * 40, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(30, audioCtx.currentTime + 0.12);
+      gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
+      osc.start(audioCtx.currentTime);
+      osc.stop(audioCtx.currentTime + 0.15);
+    } catch(e) {}
+  }
+
+  // ── 타격 처리 ──
+  function onHit(e) {
+    e.preventDefault();
+
+    // 충격: 현재 속도와 같은 방향으로 가속, 최소 임펄스 보장
+    const impulse = 0.12 + Math.abs(angVel) * 0.5;
+    angVel += (angle >= 0 ? -1 : 1) * impulse;
+    flash   = 1;
+    shake   = 8;
+
+    const mountX = CW / 2;
+    const mountY = 40;
+    const bx = mountX + Math.sin(angle) * ROPE_LEN;
+    const by = mountY + Math.cos(angle) * ROPE_LEN + BAG_H / 2;
+    spawnParticles(bx, by);
+
+    playHit(Math.min(1, Math.abs(angVel) * 5));
+
+    hitTotal++;
+    combo++;
+    if (combo > maxCombo) maxCombo = combo;
+
+    document.getElementById('hit-count').textContent  = hitTotal;
+    document.getElementById('combo-count').textContent = combo;
+    document.getElementById('max-combo').textContent  = maxCombo;
+    document.getElementById('combo-msg').textContent  = getComboMsg(combo);
+
+    clearTimeout(comboTimer);
+    comboTimer = setTimeout(() => {
+      combo = 0;
+      document.getElementById('combo-count').textContent = '0';
+      document.getElementById('combo-msg').textContent   = '클릭해서 시작하세요 👊';
+    }, 2000);
+  }
+
+  canvas.addEventListener('click',     onHit);
+  canvas.addEventListener('touchstart', onHit, { passive: false });
+
+  // ── 색상 헬퍼 ──
+  function cssVar(name) {
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  }
+
+  // ── 렌더 루프 ──
+  function drawBag() {
+    // 물리 업데이트
+    const acc = -GRAVITY * Math.sin(angle);
+    angVel += acc;
+    angVel *= DAMPING;
+    angle  += angVel;
+
+    if (flash > 0)  flash  = Math.max(0, flash  - 0.08);
+    if (shake > 0)  shake  = Math.max(0, shake  - 0.7);
+
+    // 파티클 업데이트
+    particles = particles.filter(p => p.life > 0);
+    particles.forEach(p => {
+      p.x += p.vx; p.y += p.vy;
+      p.vy += 0.18;
+      p.life -= 0.04;
+    });
+
+    // 캔버스 클리어
+    const sx = (Math.random() - 0.5) * shake;
+    const sy = (Math.random() - 0.5) * shake * 0.4;
+    ctx.save();
+    ctx.clearRect(0, 0, CW, CH);
+    ctx.translate(sx, sy);
+
+    const mountX = CW / 2;
+    const mountY = 40;
+    const bagX   = mountX + Math.sin(angle) * ROPE_LEN;
+    const bagY   = mountY + Math.cos(angle) * ROPE_LEN;
+
+    const surface2 = cssVar('--surface2') || '#1C1F2E';
+    const border   = cssVar('--border')   || '#252840';
+    const red      = cssVar('--red')      || '#FF5050';
+    const muted    = cssVar('--muted')    || '#5E6380';
+    const text     = cssVar('--text')     || '#DDD8CE';
+    const accent   = cssVar('--accent')   || '#F0DC3C';
+
+    // 천장 고리
+    ctx.beginPath();
+    ctx.arc(mountX, mountY - 6, 8, 0, Math.PI * 2);
+    ctx.strokeStyle = muted;
+    ctx.lineWidth = 3;
+    ctx.stroke();
+
+    // 체인 (로프)
+    ctx.beginPath();
+    ctx.moveTo(mountX, mountY);
+    const segments = 8;
+    for (let i = 1; i <= segments; i++) {
+      const t  = i / segments;
+      const lx = mountX + Math.sin(angle) * ROPE_LEN * t;
+      const ly = mountY + Math.cos(angle) * ROPE_LEN * t;
+      ctx.lineTo(lx, ly);
+    }
+    ctx.strokeStyle = muted;
+    ctx.lineWidth = 4;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.stroke();
+
+    // 샌드백 본체
+    ctx.save();
+    ctx.translate(bagX, bagY);
+    ctx.rotate(angle * 0.3);
+
+    const bagName = document.getElementById('bag-name').value.trim();
+    const flashR  = flash > 0 ? Math.floor(flash * 60) : 0;
+
+    // 그림자
+    ctx.shadowColor = 'rgba(0,0,0,0.4)';
+    ctx.shadowBlur  = 16 + shake * 2;
+    ctx.shadowOffsetX = angle * 6;
+
+    // 샌드백 몸체 (둥근 직사각형)
+    const rx = BAG_W / 2, ry = BAG_H / 2, r = 16;
+    ctx.beginPath();
+    ctx.moveTo(-rx + r, -ry);
+    ctx.lineTo(rx - r, -ry);
+    ctx.arcTo(rx, -ry, rx, -ry + r, r);
+    ctx.lineTo(rx, ry - r);
+    ctx.arcTo(rx, ry, rx - r, ry, r);
+    ctx.lineTo(-rx + r, ry);
+    ctx.arcTo(-rx, ry, -rx, ry - r, r);
+    ctx.lineTo(-rx, -ry + r);
+    ctx.arcTo(-rx, -ry, -rx + r, -ry, r);
+    ctx.closePath();
+
+    // 플래시 효과: 맞을 때 빨간색으로 번쩍
+    const baseColor = `rgb(${180 + flashR}, ${60 - flashR}, ${50 - flashR})`;
+    ctx.fillStyle   = baseColor;
+    ctx.shadowColor = flash > 0.3 ? red : 'rgba(0,0,0,0.3)';
+    ctx.fill();
+
+    // 가로 밴드 (질감)
+    ctx.shadowColor = 'transparent';
+    ctx.fillStyle = 'rgba(0,0,0,0.15)';
+    for (let i = -1; i <= 1; i++) {
+      ctx.fillRect(-rx + 4, i * 28 - 4, BAG_W - 8, 8);
+    }
+
+    // 테두리 하이라이트
+    ctx.strokeStyle = flash > 0.5 ? red : 'rgba(255,255,255,0.12)';
+    ctx.lineWidth = 2;
+    ctx.shadowBlur = 0;
+    ctx.beginPath();
+    ctx.moveTo(-rx + r, -ry);
+    ctx.lineTo(rx - r, -ry);
+    ctx.arcTo(rx, -ry, rx, -ry + r, r);
+    ctx.lineTo(rx, ry - r);
+    ctx.arcTo(rx, ry, rx - r, ry, r);
+    ctx.lineTo(-rx + r, ry);
+    ctx.arcTo(-rx, ry, -rx, ry - r, r);
+    ctx.lineTo(-rx, -ry + r);
+    ctx.arcTo(-rx, -ry, -rx + r, -ry, r);
+    ctx.closePath();
+    ctx.stroke();
+
+    // 이름 텍스트
+    if (bagName) {
+      ctx.fillStyle = 'rgba(255,255,255,0.85)';
+      ctx.font = `bold 13px 'Noto Sans KR', sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(bagName.length > 6 ? bagName.slice(0, 6) + '…' : bagName, 0, 0);
+    }
+
+    ctx.restore();
+
+    // 파티클 렌더
+    particles.forEach(p => {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255, ${80 + Math.floor(p.life * 80)}, 50, ${p.life})`;
+      ctx.fill();
+    });
+
+    ctx.restore();
+    requestAnimationFrame(drawBag);
+  }
+
+  drawBag();
+</script>
